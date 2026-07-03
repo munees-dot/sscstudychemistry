@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ക്വിക്ക് ക്വിസ് — ഓർഗാനിക് നാമകരണവും ഐസോമെറിസവും</title>
+<title>Quick Quiz — Nomenclature &amp; Isomerism of Organic Compounds</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 :root{
@@ -76,32 +76,33 @@ footer.note{ text-align:center; font-size:.75rem; color:#8a8067; margin-top:20px
 <div class="wrap">
 
   <header>
-    <h1>ക്വിക്ക് ക്വിസ്</h1>
-    <p>ഓർഗാനിക് നാമകരണവും ഐസോമെറിസവും · Abacus Academy</p>
+    <h1>Quick Quiz</h1>
+    <p>Nomenclature &amp; Isomerism of Organic Compounds · Abacus Academy</p>
   </header>
 
   <!-- STEP 1: name entry -->
   <div class="card" id="nameScreen">
-    <label for="studentName">നിന്റെ പേര് എഴുതുക</label>
-    <input type="text" id="studentName" placeholder="ഉദാ: അർജുൻ എസ്">
-    <button class="btn" onclick="startQuiz()">ക്വിസ് തുടങ്ങുക →</button>
+    <label for="studentName">Enter your name</label>
+    <input type="text" id="studentName" placeholder="e.g. Arjun S">
+    <button class="btn" onclick="startQuiz()">Start Quiz →</button>
   </div>
 
   <!-- STEP 2: quiz -->
   <div class="card hidden" id="quizScreen">
-    <div class="progress">ചോദ്യം <b id="qPos">1</b> / <span id="qTotal">10</span></div>
+    <div class="progress">Question <b id="qPos">1</b> / <span id="qTotal">10</span></div>
     <div id="quizContainer"></div>
     <div class="nav-row">
-      <button class="btn secondary" id="nextBtn" onclick="nextQuestion()">അടുത്തത് →</button>
+      <button class="btn secondary" id="nextBtn" onclick="nextQuestion()">Next →</button>
     </div>
   </div>
 
   <!-- STEP 3: result -->
   <div class="card hidden" id="resultScreen">
-    <p class="result-sub">നിന്റെ സ്കോർ</p>
+    <p class="result-sub">Your Score</p>
     <div class="result-score"><span id="finalScore">0</span> / <span id="finalTotal">10</span></div>
+    <p class="result-sub" style="margin-top:-8px;">👇 Tap this button to send your score to your teacher on WhatsApp</p>
     <div id="submitStatus"></div>
-    <button class="btn" onclick="shareResult()">🔗 സ്കോർ പങ്കിടുക</button>
+    <button class="btn" onclick="shareResult()">🔗 Share Score</button>
   </div>
 
   <footer class="note">Abacus Academy · Class 10 Chemistry</footer>
@@ -169,7 +170,7 @@ function renderQuestion(){
   });
   container.appendChild(qDiv);
   document.getElementById('nextBtn').disabled = true;
-  document.getElementById('nextBtn').textContent = (currentQ === quizData.length - 1) ? 'ഫലം കാണുക →' : 'അടുത്തത് →';
+  document.getElementById('nextBtn').textContent = (currentQ === quizData.length - 1) ? 'See Result →' : 'Next →';
 }
 
 function nextQuestion(){
@@ -192,7 +193,8 @@ function finishQuiz(){
 async function submitResult(){
   const statusDiv = document.getElementById('submitStatus');
   if(SUPABASE_URL.includes('YOUR-PROJECT-REF')){
-    statusDiv.innerHTML = '<p class="status-msg err">⚠️ Supabase സെറ്റപ്പ് ചെയ്തിട്ടില്ല — സ്കോർ സേവ് ചെയ്തിട്ടില്ല</p>';
+    // Supabase not set up — quiz still works, score just isn't auto-saved.
+    // Nothing shown here; the share button lets students send their score manually.
     return;
   }
   try{
@@ -212,21 +214,21 @@ async function submitResult(){
       })
     });
     if(res.ok){
-      statusDiv.innerHTML = '<p class="status-msg ok">✅ സ്കോർ സേവ് ചെയ്തു</p>';
+      statusDiv.innerHTML = '<p class="status-msg ok">✅ Score saved</p>';
     } else {
-      statusDiv.innerHTML = '<p class="status-msg err">⚠️ സ്കോർ സേവ് ചെയ്യാൻ കഴിഞ്ഞില്ല</p>';
+      statusDiv.innerHTML = '<p class="status-msg err">⚠️ Could not save score</p>';
     }
   } catch(e){
-    statusDiv.innerHTML = '<p class="status-msg err">⚠️ ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിക്കുക</p>';
+    statusDiv.innerHTML = '<p class="status-msg err">⚠️ Please check your internet connection</p>';
   }
 }
 
 function shareResult(){
-  const text = `ക്വിക്ക് ക്വിസ് — ഓർഗാനിക് നാമകരണവും ഐസോമെറിസവും\n${studentName} ന്റെ സ്കോർ: ${score} / ${quizData.length}`;
+  const text = `Quick Quiz — Nomenclature & Isomerism of Organic Compounds\n${studentName}'s score: ${score} / ${quizData.length}`;
   if(navigator.share){
-    navigator.share({ title: 'ക്വിക്ക് ക്വിസ് സ്കോർ', text: text }).catch(()=>{});
+    navigator.share({ title: 'Quick Quiz Score', text: text }).catch(()=>{});
   } else if(navigator.clipboard){
-    navigator.clipboard.writeText(text).then(()=> alert('സ്കോർ കോപ്പി ചെയ്തു!'));
+    navigator.clipboard.writeText(text).then(()=> alert('Score copied!'));
   } else {
     alert(text);
   }
